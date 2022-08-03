@@ -128,7 +128,7 @@ import uuidv4 from 'uuid/v4'
 
         },
 
-        createPost(parent, args, {db}, info) {
+        createPost(parent, args, {db, pubsub}, info) {
             const userExists = db.users.some((user) => user.id === args.data.author)
 
             if (!userExists) {
@@ -142,13 +142,19 @@ import uuidv4 from 'uuid/v4'
                 published: args.data.published,
                 author: args.data.author
             }
-
+           
             db.posts.push(post)
-
+            
+            if(args.data.published) {
+                pubsub.publish('post', {
+                    post: post
+                })
+           
+            }
             return post
         },
 
-        createComment(parent, args, {db}, info) {
+        createComment(parent, args, {db, pubsub}, info) {
             const userExists = db.users.some((user) => user.id === args.data.author)
             const postExists = db.posts.some((post) => post.id === args.data.post && post.published)
 
@@ -164,6 +170,9 @@ import uuidv4 from 'uuid/v4'
             }
 
             db.comments.push(comment)
+            pubsub.publish(`comment ${args.data.post}`, {
+                comment: comment
+            })
 
             return comment
         }
