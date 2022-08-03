@@ -2,12 +2,13 @@
 //import myAddFunction, {mathSubtract} from "./math";
 
 import { GraphQLServer } from 'graphql-yoga';
-import { db } from './db';
+import  db  from './db';
 import  Query from './resolvers/Query';
 import  Mutation  from './resolvers/Mutation';
 import  Post  from './resolvers/Post';
 import  User  from './resolvers/User';
 import  Comment  from './resolvers/Comment';
+import subscription from './resolvers/Subscription';
 
 
 
